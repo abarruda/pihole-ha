@@ -16,8 +16,8 @@ docker run -d \
     -p 80:80 \
     -p 443:443 \
     -v "$(pwd)/config/pihole/:/etc/pihole/" \
-    -v "$(pwd)./config/dnsmasq.d/:/etc/dnsmasq.d/" \
-    -v "$(pwd)./config/hosts:/etc/hosts" \
+    -v "$(pwd)/config/dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v "$(pwd)/config/hosts:/etc/hosts" \
     -v "${TEMP_USAGE_DB_PATH}${TEMP_USAGE_DB_FILE}:/etc/pihole/${TEMP_USAGE_DB_FILE}" \
     -e ServerIP="$(ip route get 8.8.8.8 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')" \
     --restart=unless-stopped \
