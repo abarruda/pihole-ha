@@ -2,6 +2,8 @@
 
 set -x
 
+touch hosts
+
 TEMP_USAGE_DB_PATH=/tmp/pihole-usage-db-vol/
 TEMP_USAGE_DB_FILE=pihole-FTL.db
 

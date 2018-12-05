@@ -1,2 +1,3 @@
+config/hosts
 config/dnsmasq.d
 config/pihole
