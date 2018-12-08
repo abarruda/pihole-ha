@@ -1,4 +1,3 @@
-config/hosts
-config/custom-dns.conf
-config/dnsmasq.d
-config/pihole
+
+data/dnsmasq.d
+data/pihole
