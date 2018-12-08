@@ -8,9 +8,7 @@ docker run -d \
     -p 67:67/udp \
     -p 80:80 \
     -p 443:443 \
-    -v "$(pwd)/config/pihole/setupVars.conf:/etc/pihole/setupVars.conf" \
-    -v "$(pwd)/config/pihole/adlists.list:/etc/pihole/adlists.list" \
-    -v "$(pwd)/config/pihole/whitelist.txt:/etc/pihole/whitelist.txt" \
+    -v "$(pwd)/config/pihole:/etc/pihole" \
     -v "$(pwd)/config/dnsmasq.d/custom-dns.conf:/etc/dnsmasq.d/custom-dns.conf" \
     -e ServerIP="$(ip route get 8.8.8.8 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')" \
     -e DNS1=8.8.8.8 \
