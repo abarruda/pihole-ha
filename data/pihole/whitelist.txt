@@ -17,3 +17,5 @@ s.youtube.com
 youtube-ui.l.google.com
 npr-news.streaming.adswizz.com
 youtu.be
+ytstatic.l.google.com
+ytimg-edge-static.l.google.com
