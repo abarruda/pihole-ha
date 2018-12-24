@@ -13,7 +13,7 @@ This project aims to provide fast configuration and deployment of the Pihole ser
 Export the password you wish to use to access the web admin interface to the `$PIHOLE_PASS` environment variable.  Then execute the `run.sh` script.
 
 ### Kubernetes Requirements
-If the cluster is run on bare metal, [Metal LB](https://metallb.universe.tf/) will be neceesary for the service's specific IP address assignment.  The IP address must be chosen and specified in the appropriate locations in both `pihole-ha-deployment.yaml` and `pihole-ha-service.yaml` sepcs.
+If the cluster is run on bare metal, [Metal LB](https://metallb.universe.tf/) will be neceesary for the service's specific IP address assignment.  The IP address must be chosen and specified in the appropriate locations in both `pihole-ha-deployment.yaml` and `pihole-ha-service.yaml` specs.
 
 The kubernetes Deployment will require a `pihole-ui-secret` secret to exist with a key `password` whose value is the base 64 encoding of the password that will gain access to the web admin interface.
 
