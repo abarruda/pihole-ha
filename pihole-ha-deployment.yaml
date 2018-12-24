@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pihole-deployment
+  labels:
+    app: pihole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pihole
+
+  template:
+    metadata:
+      labels:
+        app: pihole
+    spec:
+
+      volumes:
+      - name: pihole-data
+        emptyDir: {}
+
+      containers:
+      - name: pihole-container
+        image: pihole/pihole:4.0.0-1_armhf
+        imagePullPolicy: IfNotPresent
+
+        ports:
+          - containerPort: 53
+            name: dns-tcp
+            protocol: TCP
+          - containerPort: 53
+            name: dns-udp
+            protocol: UDP
+          - containerPort: 67
+            name: dhcp-udp
+            protocol: UDP
+          - containerPort: 80
+            name: http-tcp
+            protocol: TCP
+          - containerPort: 443
+            name: https-tcp
+            protocol: TCP
+
+        volumeMounts:
+          - name: pihole-data
+            mountPath: /etc/pihole
+
+        env:
+          - name: DNS1
+            value: "8.8.8.8"
+          - name: DNS2
+            value: "208.67.222.222"
+          - name: ServerIP
+            value: 
+          - name: TZ
+            value: "America/Los_Angeles"
+          - name: WEBPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pihole-ui-secret
+                key: password
+
+  restartPolicy: Always

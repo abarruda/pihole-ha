@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pihole-tcp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole
+  creationTimestamp: null
+  labels:
+    app: pihole
+
+spec:
+  selector:
+    app: pihole
+  externalTrafficPolicy: Local
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: 
+
+  ports:
+  - name: pihole-http
+    port: 80
+    protocol: TCP
+    targetPort: http-tcp
+  - name: pihole-https
+    port: 443
+    protocol: TCP
+    targetPort: https-tcp
+  - name: dns
+    port: 53
+    protocol: TCP
+    targetPort: dns-tcp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pihole-udp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole
+  creationTimestamp: null
+  labels:
+    app: pihole
+
+spec:
+  selector:
+    app: pihole
+  externalTrafficPolicy: Local
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: 
+
+  ports:
+  - name: dns-udp
+    port: 53
+    protocol: UDP
+    targetPort: dns-udp
+  - name: dhcp-udp
+    port: 67
+    protocol: UDP
+    targetPort: dhcp-udp
