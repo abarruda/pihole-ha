@@ -4,7 +4,6 @@ metadata:
   name: pihole-tcp
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole
-  creationTimestamp: null
   labels:
     app: pihole
 
@@ -14,7 +13,7 @@ spec:
   externalTrafficPolicy: Local
   sessionAffinity: None
   type: LoadBalancer
-  loadBalancerIP: 
+  loadBalancerIP: <IP address to assign to Load Balancer>
 
   ports:
   - name: http
@@ -36,7 +35,6 @@ metadata:
   name: pihole-udp
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole
-  creationTimestamp: null
   labels:
     app: pihole
 
@@ -46,7 +44,7 @@ spec:
   externalTrafficPolicy: Local
   sessionAffinity: None
   type: LoadBalancer
-  loadBalancerIP: 
+  loadBalancerIP: <IP address to assign to Load Balancer>
 
   ports:
   - name: dns-udp

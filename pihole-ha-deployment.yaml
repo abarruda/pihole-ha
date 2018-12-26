@@ -71,7 +71,7 @@ spec:
           - name: DNS2
             value: "208.67.222.222"
           - name: ServerIP
-            value: 
+            value: <IP address assigned to Load Balancer>
           - name: TZ
             value: "America/Los_Angeles"
           - name: WEBPASSWORD
