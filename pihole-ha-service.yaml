@@ -17,11 +17,11 @@ spec:
   loadBalancerIP: 
 
   ports:
-  - name: pihole-http
+  - name: http
     port: 80
     protocol: TCP
     targetPort: http-tcp
-  - name: pihole-https
+  - name: https
     port: 443
     protocol: TCP
     targetPort: https-tcp

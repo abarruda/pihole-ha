@@ -18,7 +18,14 @@ spec:
 
       volumes:
       - name: pihole-data
-        emptyDir: {}
+        flexVolume:
+          driver: "fstab/cifs"
+          fsType: "cifs"
+          secretRef:
+            name: "network-storage-cifs-secret"
+          options:
+            networkPath: 
+            mountOptions: "vers=1.0,auto,x-systemd.automount,dir_mode=0755,file_mode=0644,noperm"
 
       containers:
       - name: pihole-container

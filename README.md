@@ -17,9 +17,32 @@ If the cluster is run on bare metal, [Metal LB](https://metallb.universe.tf/) wi
 
 The kubernetes Deployment will require a `pihole-ui-secret` secret to exist with a key `password` whose value is the base 64 encoding of the password that will gain access to the web admin interface.
 
-#### Upcoming Changes
-Currently the deployment uses the [emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) volume type, so configuration changes and statistics are not persisted.  This will be updated to use a Persistant Volume shortly, specifically the fstab/cifs flexVolume.
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pihole-ui-secret
+type: Opaque
+data:
+  password: dGVzdAo=
+```
 
+The Deployment utilizes a kubernetes Flexvolume to access network storage to persist Pihole configuration and data, specifically the [fstab/cifs Flexvolume plugin](https://github.com/fstab/cifs) for connecting to CIFS/Samba network shares.  This requires a secret that specifies the credentials to access that share (the plugin doesn't yet support specifying the network path via the secret):
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: network-storage-cifs-secret
+  namespace: default
+type: fstab/cifs
+data:
+  username: 'dXNlcgo='
+  password: 'cmFzcGJlcnJ5Cg=='
+  # networkPath: 'Ly8xLjIuMy40Ly9waWhvbGUK'
+ ```
+
+#### Upcoming Changes
 Custom DNS entries will reside in a kubernetes [ConfigMap](https://github.com/MoJo2600/pihole-kubernetes/blob/master/configmap-pihole-custom-dnsmasq.yml) and automatically mapped to the pihole, removing a crucial bit of state out of the container.
 
 ### Kubernetes Deployment
