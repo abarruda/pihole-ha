@@ -17,14 +17,24 @@ spec:
     spec:
 
       volumes:
-      - name: pihole-data
+      - name: pihole-data-etc-pihole
         flexVolume:
           driver: "fstab/cifs"
           fsType: "cifs"
           secretRef:
             name: "network-storage-cifs-secret"
           options:
-            networkPath: 
+            networkPath: "//<server>/storage/pihole/pihole"
+            mountOptions: "vers=1.0,auto,x-systemd.automount,dir_mode=0755,file_mode=0644,noperm"
+
+      - name: pihole-data-etc-dnsmasqd
+        flexVolume:
+          driver: "fstab/cifs"
+          fsType: "cifs"
+          secretRef:
+            name: "network-storage-cifs-secret"
+          options:
+            networkPath: "//<server>/storage/pihole/dnsmasq.d"
             mountOptions: "vers=1.0,auto,x-systemd.automount,dir_mode=0755,file_mode=0644,noperm"
 
       containers:
@@ -50,8 +60,10 @@ spec:
             protocol: TCP
 
         volumeMounts:
-          - name: pihole-data
+          - name: pihole-data-etc-pihole
             mountPath: /etc/pihole
+          - name: pihole-data-etc-dnsmasqd
+            mountPath: /etc/dnsmasq.d
 
         env:
           - name: DNS1
