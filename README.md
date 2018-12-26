@@ -50,3 +50,11 @@ Custom DNS entries will reside in a kubernetes [ConfigMap](https://github.com/Mo
 - Apply the `pihole-ha-deployment` spec.  This will bring up one pihole instance.  In the event of a failure of the node the instance is running on, Kubernetes will automatically start a new instance on a healthy node.
 - Appy the `pihole-ha-service` spec.  This will allow ingress to the pihole container, providing access to DNS querying and the web admin interface.  The service has been configured to provide both UDP and TCP access for DNS.
 - Finally, update router and/or clients to point to the chosen IP address as its upstream DNS server.
+
+### Caveats
+
+##### Deployment Updates
+There is an issue in the current version of Metal LB ([v0.7.3](https://github.com/google/metallb/issues/317)) that prevents the assignment of an IP address to the load balancer when the Deployment is deleted or modified.  To resolve this, delete the Metal LB speaker Pods so that it is recreated using the new state.
+
+##### Client IP Addresses
+Despite the `externalTrafficPolicy` being set to `Local`, client IP addresses are not seen in the Pihole container, instead the Kubernetes ingress is.
