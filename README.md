@@ -55,6 +55,3 @@ Custom DNS entries will reside in a kubernetes [ConfigMap](https://github.com/Mo
 
 ##### Deployment Updates
 There is an issue in the current version of Metal LB ([v0.7.3](https://github.com/google/metallb/issues/317)) that prevents the assignment of an IP address to the load balancer when the Deployment is deleted or modified.  To resolve this, delete the Metal LB speaker Pods so that it is recreated using the new state.
-
-##### Client IP Addresses
-Despite the `externalTrafficPolicy` being set to `Local`, client IP addresses are not seen in the Pihole container, instead the Kubernetes ingress is.
