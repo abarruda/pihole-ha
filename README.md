@@ -37,6 +37,9 @@ Finally, update router and/or clients to point to the chosen IP address as its u
 
 ### Caveats
 
+If the pihole is not being used as the DHCP server for the network, but rather another device such as a router, hostnames will not resolve unless the DHCP server is configured as the first upstream resolver for the pihole container, in addition to any nameservers that are already specified.  This can be configured using the helm value override:
+``` --set dhcp.server=192.168.0.1 ```
+
 ##### Deployment Updates
 There is an issue in the current version of Metal LB [v0.7.3](https://github.com/google/metallb/issues/317) that prevents the assignment of an IP address to the load balancer when the Deployment is deleted or modified.  To resolve this, delete the Metal LB speaker Pods so that it is recreated using the new state.
 
