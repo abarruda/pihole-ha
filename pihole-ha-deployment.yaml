@@ -1,45 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pihole-v4.2.1-deployment
+  name: pihole-v4.3.2-1-deployment
   labels:
-    app: pihole-v4.2.1
+    app: pihole-v4.3.2-1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pihole-v4.2.1
+      app: pihole-v4.3.2-1
 
   template:
     metadata:
       labels:
-        app: pihole-v4.2.1
+        app: pihole-v4.3.2-1
     spec:
 
       volumes:
-      - name: pihole-v4-2-1-data-etc-pihole
+      - name: pihole-v4-3-2-1-data-etc-pihole
         flexVolume:
           driver: "fstab/cifs"
           fsType: "cifs"
           secretRef:
             name: "network-storage-cifs-secret"
           options:
-            networkPath: "//<server>/storage/pihole-v4-2-1/pihole"
+            networkPath: "//<server>/storage/pihole-v4-3-2-1/pihole"
             mountOptions: "vers=1.0"
 
-      - name: pihole-v4-2-1-data-etc-dnsmasqd
+      - name: pihole-v4-3-2-1-data-etc-dnsmasqd
         flexVolume:
           driver: "fstab/cifs"
           fsType: "cifs"
           secretRef:
             name: "network-storage-cifs-secret"
           options:
-            networkPath: "//<server>/storage/pihole-v4-2-1/dnsmasq.d"
+            networkPath: "//<server>/storage/pihole-v4-3-2-1/dnsmasq.d"
             mountOptions: "vers=1.0"
 
       containers:
-      - name: pihole-v4-2-1-container
-        image: pihole/pihole:4.2.1_armhf
+      - name: pihole-v4-3-2-1-container
+        image: pihole/pihole:4.3.2-1_armhf
         imagePullPolicy: IfNotPresent
 
         ports:
@@ -60,9 +60,9 @@ spec:
             protocol: TCP
 
         volumeMounts:
-          - name: pihole-v4-2-1-data-etc-pihole
+          - name: pihole-v4-3-2-1-data-etc-pihole
             mountPath: /etc/pihole
-          - name: pihole-v4-2-1-data-etc-dnsmasqd
+          - name: pihole-v4-3-2-1-data-etc-dnsmasqd
             mountPath: /etc/dnsmasq.d
 
         env:
