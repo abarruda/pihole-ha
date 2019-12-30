@@ -44,3 +44,6 @@ secrets:
 
 config:
   name: pihole-config
+
+dhcp:
+  server: 

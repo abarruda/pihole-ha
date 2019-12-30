@@ -44,6 +44,9 @@ spec:
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
+          {{- if .Values.dhcp.server }}
+          - {{ .Values.dhcp.server }}
+          {{- end }}
           {{- range .Values.container.nameservers }}
           - {{ . }}
           {{- end }}
