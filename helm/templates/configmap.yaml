@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pihole-config
+data:
+  pihole-FTL.conf: |
+    ANALYZE_ONLY_A_AND_AAAA=true

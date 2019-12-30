@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-{{ .Chart.Version }}-deployment
+  labels:
+    app: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-{{ .Chart.Version }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-{{ .Chart.Version }}
+
+    spec:
+
+      volumes:
+      - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-pihole
+        flexVolume:
+          driver: "fstab/cifs"
+          fsType: "cifs"
+          secretRef:
+            name: "{{ .Values.secrets.storage.name }}"
+          options:
+            networkPath: "{{ .Values.secrets.storage.networkPath }}/pihole"
+            mountOptions: "vers=1.0"
+
+      - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-dnsmasqd
+        flexVolume:
+          driver: "fstab/cifs"
+          fsType: "cifs"
+          secretRef:
+            name: "{{ .Values.secrets.storage.name }}"
+          options:
+            networkPath: "{{ .Values.secrets.storage.networkPath }}/dnsmasq.d"
+            mountOptions: "vers=1.0"
+
+      - name: config-volume
+        configMap:
+          name: {{ .Values.config.name }}
+
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          {{- range .Values.container.nameservers }}
+          - {{ . }}
+          {{- end }}
+
+      containers:
+        - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - name: dns-tcp
+              containerPort: {{ .Values.service.dns.port }}
+              protocol: TCP
+
+            - name: dns-udp
+              containerPort: {{ .Values.service.dns.port }}
+              protocol: UDP
+
+            - name: dhcp-udp
+              containerPort: {{ .Values.service.dhcp.port }}
+              protocol: UDP
+
+            - name: http-tcp
+              containerPort: {{ .Values.service.http.port }}
+              protocol: TCP
+
+            - name: https-tcp
+              containerPort: {{ .Values.service.https.port }}
+              protocol: TCP
+
+          volumeMounts:
+            - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-pihole
+              mountPath: /etc/pihole
+            - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-dnsmasqd
+              mountPath: /etc/dnsmasq.d
+            - name: config-volume
+              mountPath: /etc/pihole/pihole-FTL.conf
+              subPath: pihole-FTL.conf
+
+          env:
+            - name: DNS1
+              value: {{ .Values.dns._1 }}
+            - name: DNS2
+              value: {{ .Values.dns._2 }}
+            - name: ServerIP
+              value: {{ .Values.service.ip }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: WEBPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.ui.name }}
+                  key: password
+
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
