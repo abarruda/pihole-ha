@@ -28,6 +28,9 @@ service:
 dns:
   _1: "8.8.8.8"
   _2: "208.67.222.222"
+  domain: 
+  custom:
+
 
 timezone: "America/Los_Angeles"
 
@@ -40,10 +43,13 @@ secrets:
 
   ui:
     name: pihole-ui-secret
-    pasword: 
+    password: 
 
 config:
   name: pihole-config
+  piholeFTL:
+    ANALYZE_ONLY_A_AND_AAAA: false
+    DBFILE: /etc/pihole/pihole-FTL.db
 
 dhcp:
   server: 

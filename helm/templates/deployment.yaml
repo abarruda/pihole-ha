@@ -85,6 +85,9 @@ spec:
             - name: config-volume
               mountPath: /etc/pihole/pihole-FTL.conf
               subPath: pihole-FTL.conf
+            - name: config-volume
+              mountPath: /etc/dnsmasq.d/custom-dns.conf
+              subPath: custom-dns.conf
 
           env:
             - name: DNS1
@@ -101,11 +104,9 @@ spec:
                   name: {{ .Values.secrets.ui.name }}
                   key: password
 
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http-tcp
+            initialDelaySeconds: 60
+            periodSeconds: 30

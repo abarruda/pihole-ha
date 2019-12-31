@@ -4,4 +4,14 @@ metadata:
   name: pihole-config
 data:
   pihole-FTL.conf: |
-    ANALYZE_ONLY_A_AND_AAAA=true
+    {{ range $option, $value := .Values.config.piholeFTL }}
+    {{ $option }}={{ $value }}
+    {{ end }}
+
+  custom-dns.conf: |
+    {{ range $name, $ip := .Values.dns.custom }}
+    address=/{{ $name }}/{{ $ip }}
+
+    address=/{{ $name }}.{{ $.Values.dns.domain }}/{{ $ip }}
+
+    {{ end }}
