@@ -53,3 +53,8 @@ config:
 
 dhcp:
   server: 
+
+affinity:
+  weight: 100
+  label: 
+  value:

@@ -105,8 +105,31 @@ spec:
                   key: password
 
           livenessProbe:
-            httpGet:
-              path: /
-              port: http-tcp
+            exec:
+              command:
+                - nslookup
+                - -timeout=2
+                - google.com
+                - {{ .Values.service.ip }}
             initialDelaySeconds: 60
             periodSeconds: 30
+            # httpGet:
+            #   path: /
+            #   port: http-tcp
+            # initialDelaySeconds: 60
+            # periodSeconds: 30
+
+      {{- if .Values.affinity.value }}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.affinity.weight }}
+              preference:
+                matchExpressions:
+                  - key: "{{ .Values.affinity.label }}"
+                    operator: In
+                    values: 
+                      {{- range .Values.affinity.value }}
+                      - {{ . | quote }}
+                      {{- end }}
+      {{- end }}
