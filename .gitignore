@@ -1,2 +1,3 @@
 data/dnsmasq.d
 data/pihole
+helm/run.sh

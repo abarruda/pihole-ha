@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pihole-config
+data:
+  pihole-FTL.conf: |
+    {{ range $option, $value := .Values.config.piholeFTL }}
+    {{ $option }}={{ $value }}
+    {{ end }}
+
+  custom-dns.conf: |
+    {{ range $name, $ip := .Values.dns.custom }}
+    address=/{{ $name }}/{{ $ip }}
+
+    address=/{{ $name }}.{{ $.Values.dns.domain }}/{{ $ip }}
+
+    {{ end }}
