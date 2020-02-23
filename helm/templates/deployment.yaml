@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-{{ .Chart.Version }}
+      annotations:
+        config-checksum: {{ .Values.dns.custom | print | sha256sum }}
 
     spec:
 
@@ -86,20 +88,42 @@ spec:
                   name: {{ .Values.secrets.ui.name }}
                   key: password
 
-          livenessProbe:
-            exec:
-              command:
-                - nslookup
-                - -timeout=2
-                - google.com
-                - {{ .Values.service.ip }}
-            initialDelaySeconds: 60
-            periodSeconds: 30
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - nslookup
+          #       - -timeout=2
+          #       - google.com
+          #       - {{ .Values.service.ip }}
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 30
             # httpGet:
             #   path: /
             #   port: http-tcp
             # initialDelaySeconds: 60
             # periodSeconds: 30
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 10
 
       {{- if .Values.affinity.value }}
       affinity:
