@@ -15,7 +15,7 @@ Export the password you wish to use to access the web admin interface to the `$P
 ### Kubernetes Requirements
 If the cluster is run on bare metal, [Metal LB](https://metallb.universe.tf/) will be neceesary for the service's specific IP address assignment.  
 
-The Deployment utilizes a kubernetes Flexvolume to access network storage to persist Pihole configuration and data, specifically the [fstab/cifs Flexvolume plugin](https://github.com/fstab/cifs) for connecting to CIFS/Samba network shares.
+The Deployment utilizes a Persistent Volume Claim to persist Pihole configuration and data.
 
 ### Kubernetes Deployment
 Install the Helm chart.  The IP address, network storage path/credentials and the UI password must be passed to the helm chart installation.  Example:
