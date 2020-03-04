@@ -25,6 +25,12 @@ service:
   dhcp:
     port: 67
 
+storage:
+  piholeRoot:
+    size: 5Gi
+  dnsmasqdRoot:
+    size: 10Mi
+
 dns:
   _1: "8.8.8.8"
   _2: "208.67.222.222"
@@ -35,12 +41,6 @@ dns:
 timezone: "America/Los_Angeles"
 
 secrets:
-  storage:
-    name: pihole-storage-secret
-    networkPath:
-    user:
-    password: 
-
   ui:
     name: pihole-ui-secret
     password: 
@@ -51,8 +51,8 @@ config:
     ANALYZE_ONLY_A_AND_AAAA: false
     DBFILE: /etc/pihole/pihole-FTL.db
 
-dhcp:
-  server: 
+# dhcp:
+#   server: 
 
 affinity:
   weight: 100

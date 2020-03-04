@@ -15,7 +15,7 @@ Export the password you wish to use to access the web admin interface to the `$P
 ### Kubernetes Requirements
 If the cluster is run on bare metal, [Metal LB](https://metallb.universe.tf/) will be neceesary for the service's specific IP address assignment.  
 
-The Deployment utilizes a kubernetes Flexvolume to access network storage to persist Pihole configuration and data, specifically the [fstab/cifs Flexvolume plugin](https://github.com/fstab/cifs) for connecting to CIFS/Samba network shares.
+The Deployment utilizes a Persistent Volume Claim to persist Pihole configuration and data.
 
 ### Kubernetes Deployment
 Install the Helm chart.  The IP address, network storage path/credentials and the UI password must be passed to the helm chart installation.  Example:
@@ -51,8 +51,7 @@ helm install pihole \
 
 ### Caveats
 
-If the pihole is not being used as the DHCP server for the network, but rather another device such as a router, hostnames will not resolve unless the DHCP server is configured as the first upstream resolver for the pihole container, in addition to any nameservers that are already specified.  This can be configured using the helm value override:
-``` --set dhcp.server=192.168.0.1 ```
+If the pihole is not being used as the DHCP server for the network, but rather another device such as a router, hostnames will not resolve.
 
 ##### Deployment Updates
 There is an issue in the current version of Metal LB [v0.7.3](https://github.com/google/metallb/issues/317) that prevents the assignment of an IP address to the load balancer when the Deployment is deleted or modified.  To resolve this, delete the Metal LB speaker Pods so that it is recreated using the new state.

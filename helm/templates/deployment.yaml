@@ -13,29 +13,15 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}-{{ .Chart.Version }}
+      annotations:
+        config-checksum: {{ .Values.dns.custom | print | sha256sum }}
 
     spec:
 
       volumes:
       - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-pihole
-        flexVolume:
-          driver: "fstab/cifs"
-          fsType: "cifs"
-          secretRef:
-            name: "{{ .Values.secrets.storage.name }}"
-          options:
-            networkPath: "{{ .Values.secrets.storage.networkPath }}/pihole"
-            mountOptions: "vers=1.0"
-
-      - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-dnsmasqd
-        flexVolume:
-          driver: "fstab/cifs"
-          fsType: "cifs"
-          secretRef:
-            name: "{{ .Values.secrets.storage.name }}"
-          options:
-            networkPath: "{{ .Values.secrets.storage.networkPath }}/dnsmasq.d"
-            mountOptions: "vers=1.0"
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-pihole-root-pvclaim
 
       - name: config-volume
         configMap:
@@ -44,12 +30,14 @@ spec:
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
-          {{- if .Values.dhcp.server }}
-          - {{ .Values.dhcp.server }}
-          {{- end }}
           {{- range .Values.container.nameservers }}
           - {{ . }}
           {{- end }}
+
+        # options:
+        #   - name: rotate
+        #   - name: timeout
+        #     value: "1"
 
       containers:
         - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-container
@@ -80,8 +68,6 @@ spec:
           volumeMounts:
             - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-pihole
               mountPath: /etc/pihole
-            - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-dnsmasqd
-              mountPath: /etc/dnsmasq.d
             - name: config-volume
               mountPath: /etc/pihole/pihole-FTL.conf
               subPath: pihole-FTL.conf
@@ -104,20 +90,42 @@ spec:
                   name: {{ .Values.secrets.ui.name }}
                   key: password
 
-          livenessProbe:
-            exec:
-              command:
-                - nslookup
-                - -timeout=2
-                - google.com
-                - {{ .Values.service.ip }}
-            initialDelaySeconds: 60
-            periodSeconds: 30
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - nslookup
+          #       - -timeout=2
+          #       - google.com
+          #       - {{ .Values.service.ip }}
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 30
             # httpGet:
             #   path: /
             #   port: http-tcp
             # initialDelaySeconds: 60
             # periodSeconds: 30
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 10
 
       {{- if .Values.affinity.value }}
       affinity:
