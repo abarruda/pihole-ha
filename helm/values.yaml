@@ -51,8 +51,8 @@ config:
     ANALYZE_ONLY_A_AND_AAAA: false
     DBFILE: /etc/pihole/pihole-FTL.db
 
-dhcp:
-  server: 
+# dhcp:
+#   server: 
 
 affinity:
   weight: 100
