@@ -14,11 +14,14 @@ data:
     address=/{{ $name }}.{{ $.Values.dns.domain }}/{{ $ip }}
     {{- end }}
 
+  {{- if .Values.config.adlists }}
   adlists.list: |
     {{- range .Values.config.adlists }}
     {{ . }}
     {{- end }}
+  {{- end }}
 
+  {{- if .Values.config.blacklist }}
   black.list: |
     {{- range .Values.config.blacklist }}
     {{ . }}
@@ -28,13 +31,18 @@ data:
     {{- range .Values.config.blacklist }}
     {{ . }}
     {{- end }}
+  {{- end }}
 
+  {{- if .Values.config.blacklistRegex }}
   regex.list: |
     {{- range .Values.config.blacklistRegex }}
     {{ . }}
     {{- end }}
+  {{- end }}
 
+  {{- if .Values.config.whitelist }}
   whitelist.txt: |
     {{- range .Values.config.whitelist }}
     {{ . }}
     {{- end }}
+  {{- end}}

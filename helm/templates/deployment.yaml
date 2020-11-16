@@ -78,21 +78,29 @@ spec:
             - name: config-volume
               mountPath: /etc/dnsmasq.d/custom-dns.conf
               subPath: custom-dns.conf
+            {{- if .Values.config.adlists }}  
             - name: config-volume
               mountPath: /etc/pihole/adlists.list
               subPath: adlists.list
+            {{- end }}
+            {{- if .Values.config.blacklist }}
             - name: config-volume
               mountPath: /etc/pihole/black.list
               subPath: black.list
             - name: config-volume
               mountPath: /etc/pihole/blacklist.txt
               subPath: blacklist.txt
+            {{- end }}
+            {{- if .Values.config.blacklistRegex }}
             - name: config-volume
               mountPath: /etc/pihole/regex.list
               subPath: regex.list
+            {{- end }}
+            {{- if .Values.config.whitelist }}
             - name: config-volume
               mountPath: /etc/pihole/whitelist.txt
               subPath: whitelist.txt
+            {{- end }}
 
           env:
             - name: DNS1
@@ -140,11 +148,11 @@ spec:
               path: /
               port: 80
               scheme: HTTP
-            initialDelaySeconds: 120
+            initialDelaySeconds: 30
             timeoutSeconds: 5
             periodSeconds: 30
             successThreshold: 1
-            failureThreshold: 10
+            failureThreshold: 20
 
       {{- if .Values.affinity.value }}
       affinity:
