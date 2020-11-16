@@ -19,9 +19,11 @@ spec:
     spec:
 
       volumes:
+      {{- if .Values.storage.enabled }}  
       - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-pihole
         persistentVolumeClaim:
           claimName: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-pihole-root-pvclaim
+      {{- end }}
 
       - name: config-volume
         configMap:
@@ -66,8 +68,10 @@ spec:
               protocol: TCP
 
           volumeMounts:
+            {{- if .Values.storage.enabled }}
             - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-pihole
               mountPath: /etc/pihole
+            {{- end }}
             - name: config-volume
               mountPath: /etc/pihole/pihole-FTL.conf
               subPath: pihole-FTL.conf

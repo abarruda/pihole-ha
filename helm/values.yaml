@@ -26,6 +26,7 @@ service:
     port: 67
 
 storage:
+  enabled: false
   piholeRoot:
     size: 5Gi
   dnsmasqdRoot:
