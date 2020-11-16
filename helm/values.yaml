@@ -37,7 +37,6 @@ dns:
   domain: 
   custom:
 
-
 timezone: "America/Los_Angeles"
 
 secrets:
@@ -50,6 +49,10 @@ config:
   piholeFTL:
     ANALYZE_ONLY_A_AND_AAAA: false
     DBFILE: /etc/pihole/pihole-FTL.db
+  adlists:
+  blacklist:
+  blacklistRegex:
+  whitelist:
 
 # dhcp:
 #   server: 

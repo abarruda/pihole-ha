@@ -74,6 +74,21 @@ spec:
             - name: config-volume
               mountPath: /etc/dnsmasq.d/custom-dns.conf
               subPath: custom-dns.conf
+            - name: config-volume
+              mountPath: /etc/pihole/adlists.list
+              subPath: adlists.list
+            - name: config-volume
+              mountPath: /etc/pihole/black.list
+              subPath: black.list
+            - name: config-volume
+              mountPath: /etc/pihole/blacklist.txt
+              subPath: blacklist.txt
+            - name: config-volume
+              mountPath: /etc/pihole/regex.list
+              subPath: regex.list
+            - name: config-volume
+              mountPath: /etc/pihole/whitelist.txt
+              subPath: whitelist.txt
 
           env:
             - name: DNS1
