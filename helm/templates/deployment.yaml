@@ -14,10 +14,13 @@ spec:
       labels:
         app: {{ .Chart.Name }}-{{ .Chart.Version }}
       annotations:
-        config-checksum: {{ .Values.dns.custom | print | sha256sum }}
+        dns-checksum: {{ .Values.dns.custom | print | sha256sum }}
+        adlists-checksum: {{ .Values.config.adlists | print | sha256sum }}
+        blacklist-checksum: {{ .Values.config.blacklist | print | sha256sum }}
+        blacklist-regex-checksum: {{ .Values.config.blacklistRegex | print | sha256sum }}
+        whitelist-checksum: {{ .Values.config.whitelist | print | sha256sum }}
 
     spec:
-
       volumes:
       {{- if .Values.storage.enabled }}  
       - name: {{ .Chart.Name }}-{{ .Chart.AppVersion }}-data-etc-pihole
