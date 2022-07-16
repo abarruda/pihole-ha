@@ -4,14 +4,45 @@ metadata:
   name: pihole-config
 data:
   pihole-FTL.conf: |
-    {{ range $option, $value := .Values.config.piholeFTL }}
+    {{- range $option, $value := .Values.config.piholeFTL }}
     {{ $option }}={{ $value }}
-    {{ end }}
+    {{- end }}
 
   custom-dns.conf: |
-    {{ range $name, $ip := .Values.dns.custom }}
+    {{- range $name, $ip := .Values.dns.custom }}
     address=/{{ $name }}/{{ $ip }}
-
     address=/{{ $name }}.{{ $.Values.dns.domain }}/{{ $ip }}
+    {{- end }}
 
-    {{ end }}
+  {{- if .Values.config.adlists }}
+  adlists.list: |
+    {{- range .Values.config.adlists }}
+    {{ . }}
+    {{- end }}
+  {{- end }}
+
+  {{- if .Values.config.blacklist }}
+  black.list: |
+    {{- range .Values.config.blacklist }}
+    {{ . }}
+    {{- end }}
+
+  blacklist.txt: |
+    {{- range .Values.config.blacklist }}
+    {{ . }}
+    {{- end }}
+  {{- end }}
+
+  {{- if .Values.config.blacklistRegex }}
+  regex.list: |
+    {{- range .Values.config.blacklistRegex }}
+    {{ . }}
+    {{- end }}
+  {{- end }}
+
+  {{- if .Values.config.whitelist }}
+  whitelist.txt: |
+    {{- range .Values.config.whitelist }}
+    {{ . }}
+    {{- end }}
+  {{- end}}

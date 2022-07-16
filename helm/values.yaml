@@ -26,6 +26,7 @@ service:
     port: 67
 
 storage:
+  enabled: false
   piholeRoot:
     size: 5Gi
   dnsmasqdRoot:
@@ -36,7 +37,6 @@ dns:
   _2: "208.67.222.222"
   domain: 
   custom:
-
 
 timezone: "America/Los_Angeles"
 
@@ -50,6 +50,10 @@ config:
   piholeFTL:
     ANALYZE_ONLY_A_AND_AAAA: false
     DBFILE: /etc/pihole/pihole-FTL.db
+  adlists:
+  blacklist:
+  blacklistRegex:
+  whitelist:
 
 # dhcp:
 #   server: 
